@@ -1,0 +1,140 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Poppins", "sans-serif";
+  --breakpoint-3xl: 1920px;
+  --color-primary: #774bda;
+  --color-secondary: #dc87e9;
+  --color-tertiary: #698fd4;
+  --color-quaternary: #ce92e4;
+  --color-purple: #2c0b45;
+  --color-purple-dark: #110d1c;
+  --color-background: #f6f6f6;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-display);
+  }
+
+  body {
+    background-color: var(--color-background);
+  }
+}
+
+.btn-primary {
+  @apply relative overflow-hidden flex items-center justify-center text-white rounded-[50px] px-6 py-[10px] cursor-pointer
+         bg-gradient-to-r from-primary to-secondary;
+}
+
+.btn-primary span {
+  @apply relative z-10;
+}
+
+.btn-primary::before {
+  content: "";
+  @apply absolute inset-0 z-0 rounded-[50px];
+  background: linear-gradient(
+    to right,
+    theme("colors.primary"),
+    theme("colors.secondary")
+  );
+  transform: translateX(-100%);
+}
+
+.btn-primary:hover::before {
+  animation: slideGradient 0.5s ease forwards;
+}
+
+.btn-primary:not(:hover)::before {
+  animation: slideBack 0.6s ease forwards;
+}
+
+@keyframes slideGradient {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideBack {
+  0% {
+    transform: translateX(0);
+    background: linear-gradient(
+      to right,
+      theme("colors.primary"),
+      theme("colors.secondary")
+    );
+  }
+  98% {
+    transform: translateX(-98%);
+    background: linear-gradient(to right, theme("colors.primary"));
+  }
+  100% {
+    transform: translateX(-100%);
+    background-color: theme("colors.primary");
+  }
+}
+
+/* @keyframes rollIcon {
+  0% {
+    left: 224px;
+    transform: rotate(0deg);
+  }
+  25% {
+    left: 368px;
+    transform: rotate(180deg);
+  }
+  50% {
+    left: 180px;
+    transform: rotate(360deg);
+  }
+  100% {
+    left: 224px;
+    transform: rotate(720deg);
+  }
+}
+
+.animate-roll {
+  animation: rollIcon 4s ease-in-out forwards;
+} */
+
+@media (max-width: 1025px) {
+  .landing-page {
+    zoom: 1;
+  }
+}
+
+.btn-secondary {
+  @apply w-full flex items-center justify-center gap-2 text-white text-sm rounded-[8px] px-6 py-[8px] cursor-pointer
+         bg-gradient-to-r from-primary to-secondary;
+}
+
+.chat-box {
+  height: 410px;
+}
+
+@media (min-height: 799px) {
+  .chat-box {
+    height: 700px;
+  }
+}
+
+@media (min-height: 699px) {
+  .chat-box {
+    height: 600px;
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
