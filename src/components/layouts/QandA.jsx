@@ -44,57 +44,66 @@ const QandA = () => {
     setStarted(true);
     setInput("");
     const userMessage = { role: "user", content: userText };
-    setMessages((prev) => [...prev, userMessage]);
 
+    const loadingMessage = {
+      role: "ai",
+      content: "AI is thinking...",
+      isLoading: true,
+    };
+    setMessages((prev) => [...prev, userMessage, loadingMessage]);
     setIsLoading(true);
 
     try {
-      let convId = conversationId;
-      if (!convId) {
-        const createRes = await axiosInstance.post(
+      let res;
+
+      if (!conversationId) {
+        res = await axiosInstance.post(
           API_PATHS.CONVERSATIONS.CREATE_CONVERSATION,
-          { messages: [{ content: userText }] }
+          {
+            messages: [{ content: userText }],
+          }
         );
-        convId = createRes.data?.data?.conversationId;
-        setConversationId(convId);
+        setConversationId(res.data.data.conversationId);
       } else {
-        await axiosInstance.post(API_PATHS.CONVERSATIONS.SEND_MESSAGE(convId), {
-          content: userText,
-        });
+        res = await axiosInstance.post(
+          API_PATHS.CONVERSATIONS.SEND_MESSAGE(conversationId),
+          {
+            content: userText,
+          }
+        );
       }
 
-      const loadingMessage = { role: "ai", content: "", isLoading: true };
-      setMessages((prev) => [...prev, loadingMessage]);
-
-      const res = await axiosInstance.post(
-        API_PATHS.CONVERSATIONS.SEND_MESSAGE(convId),
-        {
-          content: userText,
-        }
-      );
-
-      let aiResponse =
-        res.data?.data?.response ||
+      let aiResponse;
+      if (res.data?.data?.response) {
+        aiResponse = res.data.data.response;
+      } else if (res.data?.data?.messages) {
+        const msgs = res.data.data.messages;
+        aiResponse = msgs.find((m) => m.role === "ai")?.content;
+      }
+      aiResponse =
+        aiResponse ||
         res.data?.response ||
         res.data?.message ||
-        res.data?.content ||
         "Sorry, no response received";
 
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.isLoading ? { role: "ai", content: aiResponse } : msg
+          msg.isLoading
+            ? { ...msg, content: aiResponse, isLoading: false }
+            : msg
         )
       );
-    } catch (err) {
-      console.error(err.response?.data || err);
+    } catch (error) {
+      console.error("Error sending message:", error);
+
+      const message =
+        error.response?.status === 401
+          ? "Session expired. Please login again."
+          : "Message sending failed. Please try again.";
+
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.isLoading
-            ? {
-                role: "ai",
-                content: "Message sending failed. Please try again.",
-              }
-            : msg
+          msg.isLoading ? { ...msg, content: message, isLoading: false } : msg
         )
       );
     } finally {
@@ -152,7 +161,7 @@ const QandA = () => {
             <div className="flex-1 w-full mb-4">
               <div
                 ref={scrollRef}
-                className="h-[400px] overflow-y-auto px-4 py-4 space-y-4 scrollbar-hide chat-box"
+                className="h-[400px] overflow-y-auto py-4 mb-6 space-y-4 scrollbar-hide chat-box"
               >
                 {messages.map((message, index) => (
                   <div
@@ -199,12 +208,11 @@ const QandA = () => {
                   className={`w-full border-[1.5px] rounded-full py-4 pl-12 pr-10 text-xs outline-none transition-colors ${
                     isLoading
                       ? "border-gray-300 bg-gray-50"
-                      : "border-gray-400 bg-gradient-to-r from-secondary/10 to-background focus:border-gray-600"
+                      : "border-gray-400 bg-gradient-to-r from-secondary to-background focus:border-gray-600"
                   }`}
                 />
                 <RiSendPlaneLine
-                  className={`absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-[18px] 
-                  ${
+                  className={`absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-[18px] ${
                     isLoading ? "text-gray-400" : "text-black hover:text-black"
                   }`}
                   onClick={() => handleSend()}

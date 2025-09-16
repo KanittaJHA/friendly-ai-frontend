@@ -11,20 +11,6 @@ const UserProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
 
-  const getCsrfToken = () => {
-    const name = "csrfToken=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookies = decodedCookie.split(";");
-
-    for (let i = 0; i < cookies.length; i++) {
-      let c = cookies[i].trim();
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return null;
-  };
-
   const updateUser = (userData) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -34,14 +20,10 @@ const UserProvider = ({ children }) => {
   const logoutUser = async () => {
     setLoading(true);
     try {
-      const csrfToken = getCsrfToken();
       await axiosInstance.post(
         API_PATHS.AUTH.LOGOUT,
         {},
-        {
-          headers: csrfToken ? { "x-csrf-token": csrfToken } : {},
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
     } catch (err) {
       console.error("Logout failed", err);
@@ -58,7 +40,7 @@ const UserProvider = ({ children }) => {
       const res = await axiosInstance.get(API_PATHS.AUTH.GET_ME, {
         withCredentials: true,
       });
-      const userData = res.data.data || res.data;
+      const userData = res.data?.data || res.data;
       if (userData) {
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
@@ -76,12 +58,8 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setLoading(false);
-    } else {
-      fetchUser();
-    }
+    if (!user) fetchUser();
+    else setLoading(false);
   }, []);
 
   return (

@@ -35,10 +35,16 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
-        email,
-        password,
-      });
+      const response = await axiosInstance.post(
+        API_PATHS.AUTH.LOGIN,
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       const userData = response.data.data;
 
