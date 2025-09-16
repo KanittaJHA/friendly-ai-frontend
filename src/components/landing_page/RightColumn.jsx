@@ -5,17 +5,21 @@ import { RiArrowRightUpLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const RightColumn = () => {
+  const navItems = ["Main", "Programs", "About us", "Blog", "Support"];
+  const experienceImages = [
+    images.EXPERIENCE_01,
+    images.EXPERIENCE_02,
+    images.EXPERIENCE_03,
+  ];
+
   return (
     <div className="flex flex-col justify-between">
       <div className="flex items-start justify-between max-[821px]:hidden">
         <ul className="text-[12px] font-medium flex flex-col gap-2 cursor-pointer max-[1025px]:gap-1.5">
-          <li>Main</li>
-          <li>Programs</li>
-          <li>About us</li>
-          <li>Blog</li>
-          <li>Support</li>
+          {navItems.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
         </ul>
-
         <Link
           to="/signin"
           className="btn-primary w-[30%] py-1.5 max-[1025px]:w-[40%]"
@@ -26,23 +30,15 @@ const RightColumn = () => {
 
       <div className="flex items-center gap-4">
         <div className="flex -space-x-4">
-          <img
-            src={images.EXPERIENCE_01}
-            alt="Experience"
-            className="w-[50px] h-[50px] rounded-[12px] object-cover border-2 border-background"
-          />
-          <img
-            src={images.EXPERIENCE_02}
-            alt="Experience"
-            className="w-[50px] h-[50px] rounded-[12px] object-cover border-2 border-background"
-          />
-          <img
-            src={images.EXPERIENCE_03}
-            alt="Experience"
-            className="w-[50px] h-[50px] rounded-[12px] object-cover border-2 border-background"
-          />
+          {experienceImages.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt="Experience"
+              className="w-[50px] h-[50px] rounded-[12px] object-cover border-2 border-background"
+            />
+          ))}
         </div>
-
         <div className="text-[12px]">
           <p className="text-black font-medium">Experiences</p>
           <p className="text-gray-600">revolutionizing industries</p>

@@ -76,7 +76,12 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setLoading(false);
+    } else {
+      fetchUser();
+    }
   }, []);
 
   return (

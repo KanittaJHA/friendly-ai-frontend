@@ -20,8 +20,8 @@ const SideMenuQandA = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logoutUser(); // เรียก API logout, ล้าง localStorage
-    navigate("/signin"); // ไปหน้าล็อกอิน
+    await logoutUser();
+    navigate("/signin");
   };
 
   const mainMenu = [

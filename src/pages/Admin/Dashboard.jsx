@@ -5,7 +5,7 @@ import UsersHistoryDashboard from "../../components/layouts/UsersHistoryDashboar
 import KnowledgeBaseDasboard from "../../components/layouts/KnowledgeBaseDasboard";
 
 const Dashboard = () => {
-  const [activeMenu, setActiveMenu] = useState("Dashboard"); // default tab
+  const [activeMenu, setActiveMenu] = useState("Dashboard");
 
   const renderContent = () => {
     switch (activeMenu) {

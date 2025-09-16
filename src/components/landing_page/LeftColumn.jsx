@@ -6,6 +6,51 @@ import { RiCloseLargeLine } from "react-icons/ri";
 
 const LeftColumn = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navItems = ["Main", "Programs", "About us", "Blog", "Support"];
+
+  const MenuButton = () => (
+    <div
+      className="flex flex-col gap-2 cursor-pointer max-[821px]:flex"
+      onClick={() => setMenuOpen(true)}
+    >
+      {[1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={`w-[45px] h-[2px] bg-black ${
+            i === 3 ? "min-[1024px]:hidden" : ""
+          }`}
+        />
+      ))}
+    </div>
+  );
+
+  const MobileMenu = () => (
+    <>
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 bg-opacity-50 z-40"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+      <div
+        className={`fixed top-0 right-0 h-full w-[60%] bg-background z-50 shadow-lg transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        } md:hidden`}
+      >
+        <div className="flex justify-end m-8 cursor-pointer">
+          <RiCloseLargeLine onClick={() => setMenuOpen(false)} />
+        </div>
+        <ul className="text-[14px] font-medium flex flex-col gap-5 mx-8">
+          {navItems.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+        <Link to="/signin" className="btn-primary py-2 mx-8 w-[40%] mt-6">
+          <span>Sign In</span>
+        </Link>
+      </div>
+    </>
+  );
 
   return (
     <div className="flex flex-col justify-between relative">
@@ -13,49 +58,15 @@ const LeftColumn = () => {
         <Link to="/">
           <img src={images.LOGO_COLOR_B} alt="Logo" className="w-[100px]" />
         </Link>
-
-        <div
-          className="flex flex-col gap-2 cursor-pointer max-[821px]:flex"
-          onClick={() => setMenuOpen(true)}
-        >
-          <span className="w-[45px] h-[2px] bg-black"></span>
-          <span className="w-[45px] h-[2px] bg-black"></span>
-          <span className="w-[45px] h-[2px] bg-black min-[1024px]:hidden"></span>
-        </div>
+        <MenuButton />
       </div>
 
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black/30 bg-opacity-50 z-40"
-          onClick={() => setMenuOpen(false)}
-        ></div>
-      )}
-
-      <div
-        className={`
-          fixed top-0 right-0 h-full w-[60%] bg-background z-50 shadow-lg transform transition-transform duration-300
-          ${menuOpen ? "translate-x-0" : "translate-x-full"} md:hidden
-        `}
-      >
-        <div className="flex justify-end m-8 cursor-pointer">
-          <RiCloseLargeLine onClick={() => setMenuOpen(false)} />
-        </div>
-        <ul className="text-[14px] font-medium flex flex-col gap-5 mx-8">
-          <li>Main</li>
-          <li>Programs</li>
-          <li>About us</li>
-          <li>Blog</li>
-          <li>Support</li>
-        </ul>
-        <Link to="/signin" className="btn-primary py-2 mx-8 w-[40%] mt-6">
-          <span>Sign In</span>
-        </Link>
-      </div>
+      <MobileMenu />
 
       <div className="flex flex-col gap-8 max-[821px]:mt-10">
         <div className="flex items-center justify-between text-gray-900 text-sm max-[1025px]:text-[12px] max-[821px]:justify-start max-[821px]:gap-6">
           <p>TRANSFORMATIVE POTENTIAL</p>
-          <span className="w-[85px] h-[1.5px] bg-gray-600"></span>
+          <span className="w-[85px] h-[1.5px] bg-gray-600" />
           <p>2025</p>
         </div>
 
